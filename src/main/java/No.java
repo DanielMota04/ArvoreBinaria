@@ -2,11 +2,13 @@ class No<T> {
     private T conteudo;
     private No<T> noEsquerdo;
     private No<T> noDireito;
+    private int altura;  // Adicionado para armazenar a altura do nó
 
     public No(T conteudo) {
         this.conteudo = conteudo;
         this.noEsquerdo = null;
         this.noDireito = null;
+        this.altura = 1;  // Novo nó é inicializado com altura 1
     }
 
     public T getConteudo() {
@@ -27,5 +29,13 @@ class No<T> {
 
     public void setNoDireito(No<T> noDireito) {
         this.noDireito = noDireito;
+    }
+
+    public int getAltura() {
+        return altura;
+    }
+
+    public void setAltura(int altura) {
+        this.altura = altura;
     }
 }

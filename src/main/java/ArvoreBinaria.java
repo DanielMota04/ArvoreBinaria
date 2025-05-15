@@ -20,6 +20,27 @@ class ArvoreBinaria<T extends Comparable<T>> {
         } else {
             atual.setNoDireito(inserir(atual.getNoDireito(), novoNo));
         }
+
+        atualizarAltura(atual);
+
+        int fatorBalanceamento = fatorBalanceamento(atual);
+
+        if (fatorBalanceamento > 1 && novoNo.getConteudo().compareTo(atual.getNoEsquerdo().getConteudo()) < 0) {
+            return rotacaoSimplesDireita(atual);
+        }
+
+        if (fatorBalanceamento < -1 && novoNo.getConteudo().compareTo(atual.getNoDireito().getConteudo()) > 0) {
+            return rotacaoSimplesEsquerda(atual);
+        }
+
+        if (fatorBalanceamento > 1 && novoNo.getConteudo().compareTo(atual.getNoEsquerdo().getConteudo()) > 0) {
+            return rotacaoDuplaEsquerdaDireita(atual);
+        }
+
+        if (fatorBalanceamento < -1 && novoNo.getConteudo().compareTo(atual.getNoDireito().getConteudo()) < 0) {
+            return rotacaoDuplaDireitaEsquerda(atual);
+        }
+
         return atual;
     }
 
@@ -27,7 +48,6 @@ class ArvoreBinaria<T extends Comparable<T>> {
         No<T> novoNo = new No<>(conteudo);
         raiz = inserir(raiz, novoNo);
     }
-
     private No<T> buscarNo(No<T> no, T valor) {
         if (no == null || no.getConteudo().equals(valor)) {
             return no;
@@ -193,8 +213,8 @@ class ArvoreBinaria<T extends Comparable<T>> {
 
     private int fatorBalanceamento(No<T> no) {
         if (no == null) return 0;
-        int alturaEsq = calcularAltura(no.getNoEsquerdo());
-        int alturaDir = calcularAltura(no.getNoDireito());
+        int alturaEsq = no.getNoEsquerdo() == null ? 0 : no.getNoEsquerdo().getAltura();
+        int alturaDir = no.getNoDireito() == null ? 0 : no.getNoDireito().getAltura();
         return alturaEsq - alturaDir;
     }
 
@@ -234,6 +254,56 @@ class ArvoreBinaria<T extends Comparable<T>> {
 
         return Math.max(alturaEsq, alturaDir) + 1;
     }
+
+    private No<T> rotacaoSimplesDireita(No<T> noDesbalanceado) {
+        No<T> novoPai = noDesbalanceado.getNoEsquerdo();
+        No<T> filhoDireitaNovoPai = novoPai.getNoDireito();
+
+        // Realiza a rotação
+        novoPai.setNoDireito(noDesbalanceado);
+        noDesbalanceado.setNoEsquerdo(filhoDireitaNovoPai);
+
+        // Atualiza alturas
+        atualizarAltura(noDesbalanceado);
+        atualizarAltura(novoPai);
+
+        return novoPai;
+    }
+
+    private No<T> rotacaoSimplesEsquerda(No<T> noDesbalanceado) {
+        No<T> novoPai = noDesbalanceado.getNoDireito();
+        No<T> filhoEsquerdaNovoPai = novoPai.getNoEsquerdo();
+
+        // Realiza a rotação
+        novoPai.setNoEsquerdo(noDesbalanceado);
+        noDesbalanceado.setNoDireito(filhoEsquerdaNovoPai);
+
+        // Atualiza alturas
+        atualizarAltura(noDesbalanceado);
+        atualizarAltura(novoPai);
+
+        return novoPai;
+    }
+
+    private No<T> rotacaoDuplaEsquerdaDireita(No<T> noDesbalanceado) {
+        noDesbalanceado.setNoEsquerdo(rotacaoSimplesEsquerda(noDesbalanceado.getNoEsquerdo()));
+        return rotacaoSimplesDireita(noDesbalanceado);
+    }
+
+    private No<T> rotacaoDuplaDireitaEsquerda(No<T> noDesbalanceado) {
+        noDesbalanceado.setNoDireito(rotacaoSimplesDireita(noDesbalanceado.getNoDireito()));
+        return rotacaoSimplesEsquerda(noDesbalanceado);
+    }
+
+    // Método auxiliar para atualizar altura de um nó
+    private void atualizarAltura(No<T> no) {
+        if (no == null) return;
+        int alturaEsq = no.getNoEsquerdo() == null ? 0 : no.getNoEsquerdo().getAltura();
+        int alturaDir = no.getNoDireito() == null ? 0 : no.getNoDireito().getAltura();
+        no.setAltura(1 + Math.max(alturaEsq, alturaDir));
+    }
+
+
 
 
 
