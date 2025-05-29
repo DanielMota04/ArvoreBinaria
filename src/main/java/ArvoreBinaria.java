@@ -259,11 +259,9 @@ class ArvoreBinaria<T extends Comparable<T>> {
         No<T> novoPai = noDesbalanceado.getNoEsquerdo();
         No<T> filhoDireitaNovoPai = novoPai.getNoDireito();
 
-        // Realiza a rotação
         novoPai.setNoDireito(noDesbalanceado);
         noDesbalanceado.setNoEsquerdo(filhoDireitaNovoPai);
 
-        // Atualiza alturas
         atualizarAltura(noDesbalanceado);
         atualizarAltura(novoPai);
 
@@ -274,11 +272,9 @@ class ArvoreBinaria<T extends Comparable<T>> {
         No<T> novoPai = noDesbalanceado.getNoDireito();
         No<T> filhoEsquerdaNovoPai = novoPai.getNoEsquerdo();
 
-        // Realiza a rotação
         novoPai.setNoEsquerdo(noDesbalanceado);
         noDesbalanceado.setNoDireito(filhoEsquerdaNovoPai);
 
-        // Atualiza alturas
         atualizarAltura(noDesbalanceado);
         atualizarAltura(novoPai);
 
@@ -295,7 +291,6 @@ class ArvoreBinaria<T extends Comparable<T>> {
         return rotacaoSimplesEsquerda(noDesbalanceado);
     }
 
-    // Método auxiliar para atualizar altura de um nó
     private void atualizarAltura(No<T> no) {
         if (no == null) return;
         int alturaEsq = no.getNoEsquerdo() == null ? 0 : no.getNoEsquerdo().getAltura();
